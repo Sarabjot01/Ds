@@ -5,16 +5,19 @@
 
 
 // check weather the number is prime or not
-let num =  4;
-for (let i=2;i<num;i++){
-    if (num % i == 0){
-        console.log("The number is not prime number")
+function isPrime(num){
+    let i=2;
+    while(i < num){
+        if(num % i == 0){
+            return false;
+        }
+        i++;
     }
-    else{
-        console.log("The number is prime number")
-    }
+    return true;
 }
 
+console.log(isPrime(5));
+console.log(isPrime(8));
 // Print Reverse array
 let arr1 = [3,1,8,80,55,6]
 let newarr1 = arr1.sort((a,b) => b-a)
@@ -30,16 +33,29 @@ console.log(newarr1);
 // console.log("This number is not a prime number");
 // }
 // solution two
-let arr3 = [1,2,3,4];
-let n = arr3.length;
-for (let i = 0; i< n ; i=i+1){
-    if(arr3[i] % 2 == 1){
-        console.log("this Array is contains prime number")
+//print n prime numbers
+function isPrime(num){
+    let i=2;
+    while(i < num){
+        if(num % i == 0){
+            return false
+        }
+        i++;
     }
-    else{
-        console.log("this Array is not containing a prime number")
+    return true;
 }
-};
+
+
+function printNPrime(num){
+    let x = 2
+    while(x <=num){
+        if(isPrime(x)){
+            console.log(x);
+        }
+        x++;
+    }
+}
+printNPrime(29);
 
 
 // Print odd numbers from the array with if else
