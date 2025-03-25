@@ -5,13 +5,15 @@
 
 
 // check weather the number is prime or not
-let num =  12;
-if ( num % 2 == 1){
-    console.log("This number is prime")
+let num =  4;
+for (let i=2;i<num;i++){
+    if (num % i == 0){
+        console.log("The number is not prime number")
+    }
+    else{
+        console.log("The number is prime number")
+    }
 }
-else{
-    console.log("this number is not prime number")
-};
 
 // Print Reverse array
 let arr1 = [3,1,8,80,55,6]
@@ -20,13 +22,13 @@ console.log(newarr1);
 
 // print first N prime numbers, N is dynamic
 // solution one 
-let arr = [1,2,3,4];
-if (arr[1] == 2){
-console.log("The number is prime number")
-}
-else{
-console.log("This number is not a prime number");
-}
+// let arr = [1,2,3,4];
+// if (arr[1] == 2){
+// console.log("The number is prime number")
+// }
+// else{
+// console.log("This number is not a prime number");
+// }
 // solution two
 let arr3 = [1,2,3,4];
 let n = arr3.length;
