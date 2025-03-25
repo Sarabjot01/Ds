@@ -123,3 +123,26 @@ const arr14 = {
    d:4
 };
 intergersOnly(arr14);
+
+
+
+// Given an object in which values are integer only, print the value if it is prime only
+const arr15 = {
+    a:10,
+    b:-5,   
+    c:2,
+    d:4
+ };
+ PrimeOnly(arr15);
+ 
+ function PrimeOnly(arr15){
+     for(let i in arr15){
+         for(let k = 2 ; k<arr15[i] ; i++){
+             if(arr15[i] % k ==0){
+                 console.log("These are not prime numbers")
+         }
+         console.log(arr15[i]);
+    }
+ }
+ };
+ 
