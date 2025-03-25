@@ -146,3 +146,25 @@ const arr15 = {
  }
  };
  
+// Given an object in which values are integer only, print the double for each value only. eg. { a: 1, b: 2} ⇒ 2, 4
+const obj = {
+    a:1,
+    b:2
+}
+DoubleNumber(obj);
+function DoubleNumber(obj){
+    for(let i in obj){
+        console.log(obj[i] * 2)
+    }
+}
+
+const obj1 = {
+    a:1,
+    b:2
+}
+DoubleNumber(obj1);
+function DoubleNumber(obj1){
+    for(let i in obj1){
+        console.log(Math.floor(obj1[i] / 2))
+    }
+}
