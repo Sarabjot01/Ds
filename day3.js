@@ -132,7 +132,7 @@ function searchData() {
 //   [[6], [[7, 8], 9]],
 //   10
 // ];
-
+// both the flatmap and flat function retuen the sub array into a single array.
 const complexData = [
     [1, 2],
     [3, [4, 5]],
@@ -140,6 +140,7 @@ const complexData = [
     10
   ];
   console.log(complexData.flat(Infinity));
+//   this Infinity shows the depth of the array to be flattened
 
   const complexData1 = [
     [1, 2],
@@ -148,6 +149,9 @@ const complexData = [
     10
   ];
   console.log(complexData1.flatMap((element) => element));
+//   console.log(complexData1.flatMap((element) => element.flat(2)));
+//   this element => elememt is the call back function used in that.
+// which loops through the array and then concatenates the arrays into a single array.
 
 
 //   7. ****IMPORTANT** Write a function that will accept an array of objects (values can be any type, arr, obj, str,num) as a parameter, and will return a new array of sum of all numeric values of Object, and if value is an Object or arr calculate the sum of it. 
