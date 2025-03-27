@@ -15,7 +15,7 @@
 // this is the code for the above question and we used the async/await funtion 
 // we used try and catch block to handle the error an dreplaced the then and catch block with async and await
 const prompt = require('prompt-sync')();
-async function fetechdata(){
+async function fetchdata(){
     try{
         const response = await fetch('https://dummyjson.com/products/search?q=phone');
         const data = await response.json();
