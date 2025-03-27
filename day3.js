@@ -163,3 +163,29 @@ const complexData = [
 //     { x: 2, y: { z: [1, 2, 3], w: 4 }, q: "test" },
 //     { p: { q: 8 }, s: [2, 3, 4] }
 //     ]; // Output: [15, 6, 17]
+
+
+
+
+const data = [
+  { a: 10, b: [5, 10], e: "hello" },
+  { x: 2, y: { z: [1, 2, 3], w: 4 }, q: "test" },
+  { p: { q: 8 }, s: [2, 3, 4] }
+  ]; // Output: [15, 6, 17]
+  
+  const sumOfValues = (arr) => {
+      return arr.map((obj) => {
+          return Object.values(obj).reduce((acc, val) => {
+              if (Array.isArray(val)) {
+                  return acc + val.reduce((a, v) => a + v, 0);
+              } else if (typeof val === 'object') {
+                  return acc + sumOfValues([val])[0];
+              } else if (typeof val === 'number') {
+                  return acc + val;
+              }
+              return acc;
+          }, 0);
+      });
+  };
+  
+  console.log(sumOfValues(data));
