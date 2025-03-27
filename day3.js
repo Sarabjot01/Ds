@@ -101,3 +101,84 @@ function searchData() {
   // Call the debounced version of 'searchData'
   debouncedSearchData();
   
+
+
+//   What potential issues exist in this code? How would you restructure it? Make this faster
+// async function fetchUserData(userId) {
+//   const user = await fetchUser(userId);
+//   const posts = await fetchPosts(userId);
+//   const comments = await fetchComments(userId);
+
+//   return { user, posts, comments };
+// }
+
+
+  async function fetchUserData(userId) {
+    const [user, posts, comments] = await Promise.allSettled([
+      fetchUser(userId),
+      fetchPosts(userId),
+      fetchComments(userId)
+    ]);
+  
+    return { user, posts, comments };
+  }
+
+
+
+//   Flatten this with and without using flat() & flatMap()
+// const complexData = [
+//   [1, 2],
+//   [3, [4, 5]],
+//   [[6], [[7, 8], 9]],
+//   10
+// ];
+
+const complexData = [
+    [1, 2],
+    [3, [4, 5]],
+    [[6], [[7, 8], 9]],
+    10
+  ];
+  console.log(complexData.flat(Infinity));
+
+  const complexData1 = [
+    [1, 2],
+    [3, [4, 5]],
+    [[6], [[7, 8], 9]],
+    10
+  ];
+  console.log(complexData1.flatMap((element) => element));
+
+
+//   7. ****IMPORTANT** Write a function that will accept an array of objects (values can be any type, arr, obj, str,num) as a parameter, and will return a new array of sum of all numeric values of Object, and if value is an Object or arr calculate the sum of it. 
+    
+//     UPDATE: Do it just for single nesting (no need of recursion)
+
+// const data = [
+//     { a: 10, b: [5, 10], e: "hello" },
+//     { x: 2, y: { z: [1, 2, 3], w: 4 }, q: "test" },
+//     { p: { q: 8 }, s: [2, 3, 4] }
+//     ]; // Output: [15, 6, 17]
+
+const data = [
+    { a: 10, b: [5, 10], e: "hello" },
+    { x: 2, y: { z: [1, 2, 3], w: 4 }, q: "test" },
+    { p: { q: 8 }, s: [2, 3, 4] }
+    ]; // Output: [15, 6, 17]
+    
+    const sumOfValues = (arr) => {
+        return arr.map((obj) => {
+            return Object.values(obj).reduce((acc, val) => {
+                if (Array.isArray(val)) {
+                    return acc + val.reduce((a, v) => a + v, 0);
+                } else if (typeof val === 'object') {
+                    return acc + sumOfValues([val])[0];
+                } else if (typeof val === 'number') {
+                    return acc + val;
+                }
+                return acc;
+            }, 0);
+        });
+    };
+    
+    console.log(sumOfValues(data));
