@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toggle Auth</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+    body{min-height:100vh;background:linear-gradient(45deg,#1e1e2f,#3b3b5b);display:flex;justify-content:center;align-items:center;}
+    .container{position:absolute;width:360px;}
+    .toggle-container{position:absolute;top:-40px;right:0;display:flex;gap:5px;}
+    .toggle-btn{padding:6px 15px;background:none;border:none;color:#fff9;font-size:12px;text-transform:uppercase;cursor:pointer;}
+    .toggle-btn.active{border-bottom:2px solid #ff6f61;}
+    .form-box{position:absolute;width:100%;background:#fff;padding:30px;border-radius:10px;box-shadow:0 10px 20px rgba(0,0,0,.2);opacity:0;visibility:hidden;transition:.3s;}
+    .form-box.active{opacity:1;visibility:visible;}
+    h2{color:#1e1e2f;text-align:center;font-size:20px;margin-bottom:20px;}
+    input{width:100%;padding:10px;margin-bottom:10px;border:none;border-radius:5px;background:#f0f0f5;}
+    .submit-btn{width:100%;padding:10px;background:#ff6f61;border:none;border-radius:5px;color:#fff;font-size:12px;text-transform:uppercase;cursor:pointer;}
+    .message{color:#ff6f61;text-align:center;margin-top:10px;}
+    .todo-list{margin-top:20px;}
+    .todo-item{padding:10px;background:#f0f0f5;margin-bottom:5px;border-radius:5px;}
+    .logout-btn{position:absolute;top:10px;right:10px;padding:5px 10px;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="toggle-container">
+      <button class="toggle-btn active" onclick="toggleForm('login')">Login</button>
+      <button class="toggle-btn" onclick="toggleForm('signup')">Sign Up</button>
+    </div>
+    <div class="form-box login active">
+      <h2>Login</h2>
+      <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+        <input id="loginEmail" type="email" placeholder="Email" required>
+        <input id="loginPassword" type="password" placeholder="Password" required>
+        <button type="submit" class="submit-btn">Login</button>
+      </form>
+      <div id="loginMessage" class="message"></div>
+    </div>
+    <div class="form-box signup">
+      <h2>Sign Up</h2>
+      <form id="signupForm" onsubmit="event.preventDefault(); handleSignup();">
+        <input id="signupUsername" type="text" placeholder="Username" required>
+        <input id="signupEmail" type="email" placeholder="Email" required>
+        <input id="signupPassword" type="password" placeholder="Password" required>
+        <button type="submit" class="submit-btn">Sign Up</button>
+      </form>
+      <div id="signupMessage" class="message"></div>
+    </div>
+    <div class="form-box todo" style="display:none;">
+      <button class="submit-btn logout-btn" onclick="handleLogout()">Logout</button>
+      <h2>Todo List</h2>
+      <form id="todoForm" onsubmit="event.preventDefault(); addTodo();">
+        <input id="todoInput" type="text" placeholder="Add a new task" required>
+        <button type="submit" class="submit-btn">Add Task</button>
+      </form>
+      <div id="todoList" class="todo-list"></div>
+    </div>
+  </div>
+  <script>
+    // Helper function for random delay
+    function delay() {
+      return new Promise(resolve => setTimeout(resolve, 500));
+    }
+
+    // Simple localStorage helpers
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('users') || '[]');
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    function getTodos() {
+      return JSON.parse(localStorage.getItem('todos') || '[]');
+    }
+
+    function saveTodos(todos) {
+      localStorage.setItem('todos', JSON.stringify(todos));
+    }
+
+    // Form toggle function
+    function toggleForm(type) {
+      const loginBtn = document.querySelector('.toggle-btn:nth-child(1)');
+      const signupBtn = document.querySelector('.toggle-btn:nth-child(2)');
+      const loginForm = document.querySelector('.form-box.login');
+      const signupForm = document.querySelector('.form-box.signup');
+      const todoForm = document.querySelector('.form-box.todo');
+
+      loginBtn.classList.remove('active');
+      signupBtn.classList.remove('active');
+      loginForm.classList.remove('active');
+      signupForm.classList.remove('active');
+      todoForm.style.display = 'none';
+
+      if (type === 'login') {
+        loginBtn.classList.add('active');
+        loginForm.classList.add('active');
+      } else if (type === 'signup') {
+        signupBtn.classList.add('active');
+        signupForm.classList.add('active');
+      } else if (type === 'todo') {
+        todoForm.style.display = 'block';
+        todoForm.classList.add('active');
+      }
+    }
+
+    // Handle signup
+    async function handleSignup() {
+      const username = document.getElementById('signupUsername').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const messageDiv = document.getElementById('signupMessage');
+
+      await delay();
+      const users = getUsers();
+      
+      if (users.some(user => user.email === email)) {
+        messageDiv.textContent = 'Email already exists!';
+        return;
+      }
+
+      const newUser = { name: username, username, email, password };
+      users.push(newUser);
+      saveUsers(users);
+      messageDiv.textContent = 'Sign up successful! Please login.';
+      document.getElementById('signupForm').reset();
+    }
+
+    // Handle login
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const messageDiv = document.getElementById('loginMessage');
+
+      await delay();
+      const users = getUsers();
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if (user) {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        toggleForm('todo');
+        loadTodos();
+      } else {
+        messageDiv.textContent = 'Invalid email or password!';
+      }
+    }
+
+    // Handle logout
+    function handleLogout() {
+      localStorage.removeItem('currentUser');
+      toggleForm('login');
+    }
+
+    // Add todo
+    async function addTodo() {
+      const todoInput = document.getElementById('todoInput');
+      const todoText = todoInput.value.trim();
+
+      if (todoText) {
+        await delay();
+        const todos = getTodos();
+        todos.push({ text: todoText, completed: false });
+        saveTodos(todos);
+        todoInput.value = '';
+        loadTodos();
+      }
+    }
+
+    // Load todos
+    async function loadTodos() {
+      await delay();
+      const todoList = document.getElementById('todoList');
+      const todos = getTodos();
+      todoList.innerHTML = '';
+      
+      todos.forEach(todo => {
+        const div = document.createElement('div');
+        div.className = 'todo-item';
+        div.textContent = todo.text;
+        todoList.appendChild(div);
+      });
+    }
+
+    // Check if user is logged in on page load
+    window.onload = function() {
+      if (localStorage.getItem('currentUser')) {
+        toggleForm('todo');
+        loadTodos();
+      }
+    };
+  </script>
+</body>
+</html>
