@@ -2,15 +2,26 @@
 
 // Write a function that will accept an array of objects (values as numbers) as a parameter, and will return a new array of sum of all values of Object
 
-let arr = [{a:1},{b:2}]
+function multiplyObjectValuesByIndex(arr) {
+    return arr.map((obj, index) => {
+      const newObj = {};
+      for (const key in obj) {
+        newObj[key] = obj[key] * index;
+      }
+      return newObj;
+    });
+  }
 
-function ArrofObj(arr) {
-    return arr.map(obj => 
-        Object.values(obj).reduce((sum, num) => sum + num, 0)
-        
-    );
-}
-
-
-const output = ArrofObj(arr);
-console.log(output);
+  function sumObjectValues(arr) {
+    return arr.map(obj => {
+      let sum = 0;
+      for (const key in obj) {
+        sum += obj[key];
+      }
+      return sum;
+    });
+  }
+  const inputArray = [{ a: 1, b: 2 }, { c: 3, d: 4 }, { e: 5 }];
+  
+  const multiplied = multiplyObjectValuesByIndex(inputArray);
+  console.log("Multiplied by index:", multiplied);
