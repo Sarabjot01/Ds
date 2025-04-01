@@ -53,15 +53,18 @@
           try {
             let users = JSON.parse(localStorage.getItem('users') || '[]');
             users.push(user);
+            // add users to the new string
             localStorage.setItem('users', JSON.stringify(users));
+            // saves and updats the array back to the local sotrage using JSON.stringify.
             resolve();
+            // if successfull it resolves the promise , othersie it rejects it with an error.
           } catch (error) {
             reject(error);
           }
         }, 500);
       });
     }
-
+    // This function is essential for fetching existing user data to check for duplicates during signup or validate credentials during login.
     function getUsers() {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -91,6 +94,7 @@
         l.classList.remove('active');
         sf.classList.add('active');
         lf.classList.remove('active');
+        // The use of CSS classes (like active) typically controls visibility or styling, making it visually clear which form is currently active.
       }
     }
 
@@ -112,6 +116,7 @@
         .then(users => {
           if (users.some(user => user.email === email)) {
             messageDiv.textContent = 'Email already exists!';
+            // Checks if any existing user has the same email using .some()
             return;
           }
           return saveUser(newUser);
