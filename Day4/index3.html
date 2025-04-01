@@ -157,11 +157,17 @@
     async function addTodo() {
       const todoInput = document.getElementById('todoInput');
       const todoText = todoInput.value.trim();
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-      if (todoText) {
+      if (todoText && currentUser) {
         await delay();
         const todos = getTodos();
-        todos.push({ text: todoText, completed: false });
+        todos.push({ 
+          text: todoText, 
+          completed: false, 
+          userEmail: currentUser.email,
+          username: currentUser.username 
+        });
         saveTodos(todos);
         todoInput.value = '';
         loadTodos();
@@ -173,19 +179,23 @@
       await delay();
       const todoList = document.getElementById('todoList');
       const todos = getTodos();
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       todoList.innerHTML = '';
       
-      todos.forEach(todo => {
-        const div = document.createElement('div');
-        div.className = 'todo-item';
-        div.textContent = todo.text;
-        todoList.appendChild(div);
-      });
+      todos
+        .filter(todo => todo.userEmail === currentUser.email)
+        .forEach(todo => {
+          const div = document.createElement('div');
+          div.className = 'todo-item';
+          div.textContent = todo.text;
+          todoList.appendChild(div);
+        });
     }
 
     // Check if user is logged in on page load
     window.onload = function() {
-      if (localStorage.getItem('currentUser')) {
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
         toggleForm('todo');
         loadTodos();
       }
