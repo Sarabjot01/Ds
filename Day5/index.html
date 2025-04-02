@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Master</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-container">
+            <div class="toggle-container">
+                <button class="toggle-btn active" onclick="toggleForm('login')">Login</button>
+                <button class="toggle-btn" onclick="toggleForm('signup')">Sign Up</button>
+            </div>
+
+            <div class="form-box login active">
+                <h2>Welcome Back</h2>
+                <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+                    <input id="loginEmail" type="email" placeholder="Email" required>
+                    <input id="loginPassword" type="password" placeholder="Password" required>
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+                <div id="loginMessage" class="message"></div>
+            </div>
+
+            <div class="form-box signup">
+                <h2>Create Account</h2>
+                <form id="signupForm" onsubmit="event.preventDefault(); handleSignup();">
+                    <input id="signupUsername" type="text" placeholder="Username" required>
+                    <input id="signupEmail" type="email" placeholder="Email" required>
+                    <input id="signupPassword" type="password" placeholder="Password" required minlength="6">
+                    <button type="submit" class="submit-btn">Sign Up</button>
+                </form>
+                <div id="signupMessage" class="message"></div>
+            </div>
+
+            <div class="form-box todo" style="display:none;">
+                <div class="todo-header">
+                    <h2>Todo Master</h2>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+                
+                <form id="todoForm" onsubmit="event.preventDefault(); addTodo();">
+                    <input id="todoInput" type="text" placeholder="Add a new task" required minlength="2">
+                    <select id="todoPriority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                    <button type="submit" class="submit-btn">Add Task</button>
+                </form>
+
+                <div class="todo-controls">
+                    <input id="todoSearch" type="text" placeholder="Search todos..." oninput="debouncedSearchTodos()">
+                    <select id="todoSort" onchange="loadTodos()">
+                        <option value="date">Sort by Date</option>
+                        <option value="name">Sort by Name</option>
+                        <option value="priority">Sort by Priority</option>
+                    </select>
+                </div>
+
+                <div id="todoList" class="todo-list"></div>
+                <div class="pagination">
+                    <button onclick="prevPage()" class="page-btn">Previous</button>
+                    <span id="pageInfo"></span>
+                    <button onclick="nextPage()" class="page-btn">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./scripts/main.js"></script>
+</body>
+</html>

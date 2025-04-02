@@ -1,0 +1,140 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f0f0f0; /* Basic light gray background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 400px;
+    padding: 20px;
+}
+
+.auth-container {
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc; /* Basic border */
+}
+
+.toggle-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.toggle-btn {
+    padding: 8px 20px;
+    background-color: #ddd; /* Light gray */
+    border: 1px solid #999;
+    cursor: pointer;
+}
+
+.toggle-btn.active {
+    background-color: #666; /* Darker gray */
+    color: white;
+}
+
+.form-box {
+    display: none; /* Hidden by default */
+}
+
+.form-box.active {
+    display: block; /* Show when active */
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #333; /* Dark gray */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.message {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.todo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logout-btn {
+    padding: 8px 15px;
+    background-color: #f00; /* Red */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.todo-controls {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+}
+
+.todo-list {
+    /* Removed max-height and overflow-y to eliminate scroller */
+}
+
+.todo-item {
+    padding: 10px;
+    background-color: #eee; /* Light gray */
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-item.high { border-left: 4px solid red; }
+.todo-item.medium { border-left: 4px solid orange; }
+.todo-item.low { border-left: 4px solid green; }
+.todo-item.completed { text-decoration: line-through; }
+
+.todo-actions button {
+    padding: 5px 10px;
+    margin-left: 5px;
+    border: 1px solid #999;
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-btn {
+    padding: 8px 15px;
+    background-color: #333; /* Dark gray */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
