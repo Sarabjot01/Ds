@@ -223,7 +223,7 @@ function nextPage() {
 }
 
 function startTokenCheck() {
-    stopTokenCheck(); // Clear any existing interval
+    stopTokenCheck();
     tokenCheckInterval = setInterval(() => {
         const token = getCookie('jwt');
         const currentUser = localStorage.getItem('currentUser');
@@ -242,7 +242,7 @@ function stopTokenCheck() {
 
 // Initialize
 window.onload = function() {
-    stopTokenCheck(); // Ensure no interval runs initially
+    stopTokenCheck();
     const token = getCookie('jwt');
     const currentUser = localStorage.getItem('currentUser');
 

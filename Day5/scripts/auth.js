@@ -1,6 +1,6 @@
 export function generateJWT(user) {
     const header = btoa(JSON.stringify({ alg: "HS256", typ: "JWT" }));
-    const payload = btoa(JSON.stringify({ email: user.email, exp: Date.now() + 600000 })); // 60 seconds
+    const payload = btoa(JSON.stringify({ email: user.email, exp: Date.now() + 60000 })); // 60 seconds
     const signature = btoa("fake-signature"); // Simplified for frontend
     return `${header}.${payload}.${signature}`;
 }
