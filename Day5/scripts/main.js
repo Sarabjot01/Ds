@@ -8,7 +8,7 @@ const todosPerPage = 5;
 let searchQuery = '';
 let tokenCheckInterval = null;
 
-// Utility function
+
 function delay(ms = 500) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

@@ -7,5 +7,6 @@ export function saveUsers(users) {
 }
 
 export function hashPassword(password) {
-    return btoa(password.split('').reverse().join('')); // Simple hash for demo
+    return btoa(password.split('').reverse().join('')); 
+    // we use btoa to encode the reversed password
 }
