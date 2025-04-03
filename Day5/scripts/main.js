@@ -8,7 +8,6 @@ const todosPerPage = 5;
 let searchQuery = '';
 let tokenCheckInterval = null;
 
-
 function delay(ms = 500) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -20,8 +19,9 @@ window.handleLogin = handleLogin;
 window.handleLogout = handleLogout;
 window.addTodo = addTodo;
 window.editTodo = editTodo;
+window.closeEdit = closeEdit; // New function for closing edit mode
 window.deleteTodo = deleteTodo;
-window.toggleTodoStatus = toggleTodoStatus;
+window.toggleTodoStatus = toggleTodoStatus; // Still exposed but not used directly in UI anymore
 window.debouncedSearchTodos = debounce(() => {
     searchQuery = document.getElementById('todoSearch').value.toLowerCase();
     loadTodos();
@@ -29,6 +29,8 @@ window.debouncedSearchTodos = debounce(() => {
 window.loadTodos = loadTodos;
 window.prevPage = prevPage;
 window.nextPage = nextPage;
+window.changePriority = changePriority;
+window.changeStatus = changeStatus;
 
 function toggleForm(type) {
     document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
@@ -120,7 +122,7 @@ async function addTodo() {
         id: Date.now(),
         text,
         priority,
-        completed: false,
+        status: 'pending', // Default status is 'pending' instead of completed boolean
         userEmail: currentUser.email,
         createdAt: new Date().toISOString()
     });
@@ -132,12 +134,56 @@ async function addTodo() {
 function editTodo(id) {
     const todos = getTodos();
     const todo = todos.find(t => t.id === id);
-    const newText = prompt('Edit todo:', todo.text);
-    if (newText) {
-        todo.text = newText;
-        saveTodos(todos);
-        loadTodos();
-    }
+    const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
+    const taskText = todoItem.querySelector('.task-text');
+    const prioritySelect = todoItem.querySelector('.priority-select');
+    const statusSelect = todoItem.querySelector('.status-select');
+    const editBtn = todoItem.querySelector('.edit-btn');
+    const closeBtn = todoItem.querySelector('.close-btn');
+
+    // Enable editing mode
+    taskText.contentEditable = true;
+    taskText.focus();
+    prioritySelect.style.display = 'inline-block'; // Show dropdowns
+    statusSelect.style.display = 'inline-block';
+    editBtn.style.display = 'none'; // Hide Edit button
+    closeBtn.style.display = 'inline-block'; // Show Close button
+
+    taskText.addEventListener('blur', function handler() {
+        const newText = taskText.textContent.trim();
+        if (newText && newText !== todo.text) {
+            todo.text = newText;
+            saveTodos(todos);
+        }
+        // Don't reload here; wait for Close button
+        taskText.contentEditable = false;
+        taskText.removeEventListener('blur', handler);
+    }, { once: true });
+
+    taskText.addEventListener('keydown', function handler(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            taskText.blur(); // Trigger blur to save text
+        }
+    });
+}
+
+function closeEdit(id) {
+    const todos = getTodos();
+    const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
+    const taskText = todoItem.querySelector('.task-text');
+    const prioritySelect = todoItem.querySelector('.priority-select');
+    const statusSelect = todoItem.querySelector('.status-select');
+    const editBtn = todoItem.querySelector('.edit-btn');
+    const closeBtn = todoItem.querySelector('.close-btn');
+
+    // Exit editing mode
+    taskText.contentEditable = false;
+    prioritySelect.style.display = 'none'; // Hide dropdowns
+    statusSelect.style.display = 'none';
+    editBtn.style.display = 'inline-block'; // Show Edit button
+    closeBtn.style.display = 'none'; // Hide Close button
+    loadTodos(); // Refresh to reflect all changes
 }
 
 function deleteTodo(id) {
@@ -149,9 +195,30 @@ function deleteTodo(id) {
 function toggleTodoStatus(id) {
     const todos = getTodos();
     const todo = todos.find(t => t.id === id);
-    todo.completed = !todo.completed;
+    todo.completed = !todo.completed; // Kept for compatibility, though replaced by status
     saveTodos(todos);
     loadTodos();
+}
+
+function changeStatus(id, newStatus) {
+    const todos = getTodos();
+    const todo = todos.find(t => t.id === id);
+    if (todo.status !== newStatus) {
+        todo.status = newStatus;
+        todo.completed = newStatus === 'completed'; // Map status to completed
+        saveTodos(todos);
+        // Don't reload here; wait for Close button
+    }
+}
+
+function changePriority(id, newPriority) {
+    const todos = getTodos();
+    const todo = todos.find(t => t.id === id);
+    if (todo.priority !== newPriority) {
+        todo.priority = newPriority;
+        saveTodos(todos);
+        // Don't reload here; wait for Close button
+    }
 }
 
 function debounce(func, wait) {
@@ -192,12 +259,23 @@ async function loadTodos() {
 
     paginatedTodos.forEach(todo => {
         const div = document.createElement('div');
-        div.className = `todo-item ${todo.priority} ${todo.completed ? 'completed' : ''}`;
+        div.className = `todo-item ${todo.priority} ${todo.status}`;
+        div.setAttribute('data-id', todo.id);
         div.innerHTML = `
-            <span>${todo.text}</span>
+            <span class="task-text">${todo.text}</span>
+            <select class="priority-select" onchange="changePriority(${todo.id}, this.value)" style="display: none;">
+                <option value="low" ${todo.priority === 'low' ? 'selected' : ''}>Low</option>
+                <option value="medium" ${todo.priority === 'medium' ? 'selected' : ''}>Medium</option>
+                <option value="high" ${todo.priority === 'high' ? 'selected' : ''}>High</option>
+            </select>
+            <select class="status-select" onchange="changeStatus(${todo.id}, this.value)" style="display: none;">
+                <option value="pending" ${todo.status === 'pending' ? 'selected' : ''}>Pending</option>
+                <option value="in-progress" ${todo.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                <option value="completed" ${todo.status === 'completed' ? 'selected' : ''}>Completed</option>
+            </select>
             <div class="todo-actions">
-                <button onclick="toggleTodoStatus(${todo.id})">${todo.completed ? 'Undo' : 'Done'}</button>
-                <button onclick="editTodo(${todo.id})">Edit</button>
+                <button class="edit-btn" onclick="editTodo(${todo.id})">Edit</button>
+                <button class="close-btn" onclick="closeEdit(${todo.id})" style="display: none;">Close</button>
                 <button onclick="deleteTodo(${todo.id})">Delete</button>
             </div>
         `;

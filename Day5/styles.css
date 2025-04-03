@@ -109,12 +109,15 @@ input, select {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px; /* Added gap for spacing between elements */
 }
 
 .todo-item.high { border-left: 4px solid red; }
 .todo-item.medium { border-left: 4px solid orange; }
 .todo-item.low { border-left: 4px solid green; }
-.todo-item.completed { text-decoration: line-through; }
+.todo-item.pending { background-color: #fff3cd; } /* Light yellow for pending */
+.todo-item.in-progress { background-color: #cce5ff; } /* Light blue for in progress */
+.todo-item.completed { text-decoration: line-through; background-color: #d4edda; } /* Light green for completed */
 
 .todo-actions button {
     padding: 5px 10px;
@@ -122,6 +125,43 @@ input, select {
     border: 1px solid #999;
     background-color: #ddd;
     cursor: pointer;
+}
+
+/* New styles for added elements */
+.task-text {
+    flex-grow: 1; /* Allow text to take available space */
+    padding: 5px;
+}
+
+.task-text[contenteditable="true"] {
+    background-color: #fff; /* White background when editing */
+    border: 1px solid #999;
+    outline: none;
+}
+
+.priority-select {
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #fff;
+}
+
+/* New styles for status dropdown */
+.status-select {
+    padding: 5px;
+    border: 1px solid #999;
+    background-color: #fff;
+}
+
+.status-btn {
+    padding: 5px 10px;
+    border: 1px solid #999;
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.status-btn.completed {
+    background-color: #4CAF50; /* Green for completed */
+    color: white;
 }
 
 .pagination {
