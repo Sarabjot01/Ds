@@ -208,6 +208,15 @@ function changeStatus(id, newStatus) {
         todo.completed = newStatus === 'completed'; // Map status to completed
         saveTodos(todos);
         // Don't reload here; wait for Close button
+        // Apply strikethrough to priority and status when completed
+        const todoItem = document.querySelector(`.todo-item[data-id="${id}"]`);
+        if (newStatus === 'completed') {
+            todoItem.querySelector('.priority-select').classList.add('completed-strike');
+            todoItem.querySelector('.status-select').classList.add('completed-strike');
+        } else {
+            todoItem.querySelector('.priority-select').classList.remove('completed-strike');
+            todoItem.querySelector('.status-select').classList.remove('completed-strike');
+        }
     }
 }
 
@@ -263,12 +272,12 @@ async function loadTodos() {
         div.setAttribute('data-id', todo.id);
         div.innerHTML = `
             <span class="task-text">${todo.text}</span>
-            <select class="priority-select" onchange="changePriority(${todo.id}, this.value)" style="display: none;">
+            <select class="priority-select ${todo.status === 'completed' ? 'completed-strike' : ''}" onchange="changePriority(${todo.id}, this.value)" style="display: none;">
                 <option value="low" ${todo.priority === 'low' ? 'selected' : ''}>Low</option>
                 <option value="medium" ${todo.priority === 'medium' ? 'selected' : ''}>Medium</option>
                 <option value="high" ${todo.priority === 'high' ? 'selected' : ''}>High</option>
             </select>
-            <select class="status-select" onchange="changeStatus(${todo.id}, this.value)" style="display: none;">
+            <select class="status-select ${todo.status === 'completed' ? 'completed-strike' : ''}" onchange="changeStatus(${todo.id}, this.value)" style="display: none;">
                 <option value="pending" ${todo.status === 'pending' ? 'selected' : ''}>Pending</option>
                 <option value="in-progress" ${todo.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
                 <option value="completed" ${todo.status === 'completed' ? 'selected' : ''}>Completed</option>
